@@ -2021,7 +2021,7 @@ parametri).
 \vspace{4pt}
 \begin{infobox}
 Metrică de evaluare care măsoară suprapunerea dintre masca prezisă de model
-și masca reală (\textit{Ground Truth}), exprimată ca un scor între 0 și 1.
+și masca reală (\textit{Ground Truth}), exprimată ca un scor între 0 și 1~\cite{bilic2023lits}.
 \end{infobox}
 
 \formula{
@@ -2034,7 +2034,7 @@ este invariantă la dezechilibrul de clase (o tumoră mică contribuie la fel ca
 are o interpretare intuitivă (0 = nicio suprapunere, 1 = suprapunere perfectă) și este direct
 optimizabilă prin DiceLoss. Valorile raportate în literatura de specialitate pentru segmentarea
 ficatului sunt în general peste 0.94, iar pentru tumori hepatice valorile sunt mai mici
-și mai variabile (0.50–0.80), reflectând dificultatea problemei.
+și mai variabile (0.50–0.80), reflectând dificultatea problemei~\cite{bilic2023lits}.
 
 \begin{center}
 \begin{tabular}{cl}
@@ -2056,7 +2056,7 @@ ficatului sunt în general peste 0.94, iar pentru tumori hepatice valorile sunt 
 \vspace{4pt}
 \begin{infobox}
 Măsoară cât de mult diferă suprapunerea dintre predicție și GT,
-exprimată ca eroare procentuală. Este complementul lui IoU (Jaccard Index).
+exprimată ca eroare procentuală. Este complementul lui IoU (Jaccard Index)~\cite{bilic2023lits}.
 \end{infobox}
 
 \formula{
@@ -2075,7 +2075,7 @@ coeficientul Sørensen-Dice — cele două sunt monoton corelate, dar nu identic
 \begin{infobox}
 Măsoară cu câte procente modelul supraestimează sau subestimează
 volumul față de realitate. RVD nu ține cont de \textit{unde} sunt
-voxelii — doar de \textit{câți} sunt.
+voxelii — doar de \textit{câți} sunt~\cite{bilic2023lits}.
 \end{infobox}
 
 \formula{
@@ -2102,7 +2102,7 @@ De aceea RVD se folosește \textbf{mereu împreună cu Dice}.
 \begin{infobox}
 Măsoară cât de departe sunt contururile predicției față de contururile
 reale, exprimat în milimetri. ASD operează pe \textit{suprafețe},
-nu pe volume.
+nu pe volume~\cite{bilic2023lits}.
 \end{infobox}
 
 \formula{
@@ -2121,7 +2121,7 @@ de predicții parțiale.
 
 Metricile globale (Dice, VOE) calculează performanța pe întregul volum, fără a distinge
 între tumorile de dimensiuni diferite. Deoarece tumorile mici sunt mult mai greu de detectat
-decât cele mari, sunt raportate separate metrici de detecție per categorie:
+decât cele mari, sunt raportate separate metrici de detecție per categorie~\cite{bilic2023lits}:
 
 \begin{center}
 \begin{tabular}{lccc}
@@ -2138,7 +2138,7 @@ decât cele mari, sunt raportate separate metrici de detecție per categorie:
 O tumoră GT este considerată detectată (\textbf{TP}) dacă există o componentă conexă din
 predicție cu IoU $> 0.5$ față de acea tumoră. Altfel este \textbf{FN} (ratată).
 O componentă conexă din predicție fără corespondent în GT (IoU $\leq 0.5$ față de orice GT)
-este \textbf{FP} (detecție falsă).
+este \textbf{FP} (detecție falsă)~\cite{bilic2023lits}.
 
 \subsection{Recall}
 \vspace{4pt}
@@ -2191,9 +2191,6 @@ deoarece sintetizează simultan capacitatea de a găsi tumorile reale
 că toate tumorile reale au fost detectate fără nicio detecție falsă.
 
 \newpage
-
-
-
 
 % ════════════════════════════════════════════════════════════════════════════
 %  CAPITOLUL 5 — ARHITECTURI
@@ -6708,6 +6705,14 @@ dintre segmentarea automată, corecția umană și vizualizarea 3D actualizată.
       printr-un singur set de date centralizat.
 
 \begin{thebibliography}{99}
+\bibitem{bilic2023lits}
+Bilic, P., Christ, P., Li, H. B., Vorontsov, E., Ben-Cohen, A., Kaissis, G.,
+Szeskin, A., Jacobs, C., Mamani, G. E. H., Chartrand, G., et al. (2023).
+\textit{The Liver Tumor Segmentation Benchmark (LiTS)}.
+Medical Image Analysis, 84, 102680.
+\url{https://doi.org/10.1016/j.media.2022.102680}
+(arXiv preprint: \url{https://arxiv.org/abs/1901.04056})
+
 \bibitem{milletari2016vnet}
 Milletari, F., Navab, N., \& Ahmadi, S.-A. (2016).
 \textit{V-Net: Fully Convolutional Neural Networks for Volumetric Medical
