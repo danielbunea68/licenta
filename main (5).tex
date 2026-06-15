@@ -1035,7 +1035,7 @@ distribuții de intensitate cu semnificație fizică precisă (scala Hounsfield)
 să poată fi introduse în rețeaua neuronală.
 
 În proiectul de față, pipeline-ul de preprocesare este implementat folosind biblioteca MONAI
-(Medical Open Network for AI) și urmează o ordine strict definită de transformări deterministe
+(Medical Open Network for AI)~\cite{cardoso2022monai} și urmează o ordine strict definită de transformări deterministe
 aplicate atât imaginii CT cât și măștii de segmentare corespunzătoare.
 
 \section{Spațierea Voxelilor (Spacing)}
@@ -1054,12 +1054,12 @@ Volumele CT provenite din practica clinică nu au în general o rezoluție izotr
 Rezoluția în plan (axele $x$ și $y$) este de obicei mult mai bună decât rezoluția inter-felii
 (axa $z$), care poate varia de la 0.5\,mm la 5\,mm sau mai mult, în funcție de protocolul de achiziție
 și de tipul scannerului. Această anizotropie creează o problemă fundamentală pentru rețelele neuronale 3D:
-kernelurile de convoluție $3{\times}3{\times}3$ tratează toate cele trei dimensiuni în mod egal,
+kernelurile de convoluție $3{\times}3{\times}3$ tratează toate cele trei dimensiuni în mod egal~\cite{cicek2016_3dunet},
 ignorând faptul că un voxel poate reprezenta 0.7\,mm în plan dar 5\,mm pe axa $z$.
 
 Soluția standard este resamplingul tuturor volumelor la o spațiere uniformă înainte de antrenament,
-astfel încât rețeaua să opereze într-un spațiu metric consistent. Alegerea valorii de spacing
-implică un compromis important între rezoluție și dimensiunea memoriei GPU necesare.
+astfel încât rețeaua să opereze într-un spațiu metric consistent~\cite{isensee2019automated}.
+Alegerea valorii de spacing implică un compromis important între rezoluție și dimensiunea memoriei GPU necesare.
 
 \subsection{Tradeoff rezoluție vs.\ acoperire}
 \label{sec:spacing_tabel}
@@ -1131,7 +1131,7 @@ $+40$ și $+60$\,HU, iar tumorile hepatice prezintă de obicei valori ușor mai 
 Fereastra HU definește intervalul $[\text{HU\_MIN},\; \text{HU\_MAX}]$ de valori păstrate.
 Voxelii sub HU\_MIN sunt clampați la HU\_MIN, cei peste HU\_MAX la HU\_MAX. Fereastra este
 aleasă astfel încât să maximizeze contrastul dintre structurile de interes (ficat, tumori,
-vase), eliminând contribuția structurilor irelevante (os, aer).
+vase), eliminând contribuția structurilor irelevante (os, aer)~\cite{isensee2019automated, weihsbach2023windowshift}.
 
 Intensitățile clipate sunt normalizate liniar în intervalul $[0{,}0,\; 1{,}0]$:
 
@@ -1190,7 +1190,7 @@ orientarea originală a datelor. Această inconsistență face antrenamentul mul
 
 \subsection{Implementare și impact}
 
-Transformul \texttt{Orientationd} din MONAI aplică automat permutările și flip-urile necesare
+Transformul \texttt{Orientationd} din MONAI~\cite{cardoso2022monai} aplică automat permutările și flip-urile necesare
 pentru a aduce orice volum la convenția RAS, indiferent de orientarea sa originală:
 
 \begin{lstlisting}[language=Python]
@@ -1224,7 +1224,7 @@ de extragerea patch-urilor.
 Volumele CT brute conțin adesea margini mari de aer (valori HU $\approx -1000$) în jurul pacientului,
 precum și porțiuni ale patului de scanner sau ale mesei de examinare. Aceste zone nu conțin
 informație relevantă pentru segmentarea hepatică și ocupă în schimb memorie GPU valoroasă.
-\texttt{CropForegroundd} calculează cel mai mic paralelipiped dreptunghic (bounding box 3D)
+\texttt{CropForegroundd}~\cite{isensee2019automated, cardoso2022monai} calculează cel mai mic paralelipiped dreptunghic (bounding box 3D)
 care conține toți voxelii cu intensitate peste un prag specificat și trunchiează volumul la acea regiune.
 
 Pașii de funcționare sunt:
@@ -1249,7 +1249,6 @@ CropForegroundd(keys=["image", "label"], source_key="image")
 Parametrul \texttt{source\_key="image"} indică faptul că bounding box-ul se calculează
 pe baza imaginii CT, iar același crop se aplică și pe masca de segmentare (\texttt{label}),
 garantând că imaginea și masca rămân aliniate spațial după operație.
-
 
 % ════════════════════════════════════════════════════════════════════════════
 %  CAPITOLUL 3 — AUGMENTARE
