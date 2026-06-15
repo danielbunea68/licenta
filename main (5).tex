@@ -2204,7 +2204,7 @@ că toate tumorile reale au fost detectate fără nicio detecție falsă.
 
 DynUNet este implementarea MONAI a arhitecturii nnUNet
 (\textit{no-new-UNet}), propusă de Isensee et al.\ în
-2021~\cite{isensee2021nnu}. Filozofia nnUNet nu este aceea de a
+2021~\cite{isensee2019automated, isensee2018selfadapting}. Filozofia nnUNet nu este aceea de a
 propune o arhitectură nouă, ci de a demonstra că o arhitectură
 clasică UNet, corect configurată pe baza proprietăților setului de
 date, depășește metodele specializate. DynUNet reproduce această
@@ -2752,7 +2752,7 @@ iar $\arg\max$ atribuie voxelul clasei \textit{ficat}.
 
 SwinUNETR (Swin Transformer UNETR) combină puterea de reprezentare globală a
 Transformer-elor cu structura encoder-decoder a UNet, adaptată pentru volume
-medicale 3D. Arhitectura a fost propusă de Tang et al.\ (2022) și reprezintă
+medicale 3D. Arhitectura a fost propusă de Tang et al.\ (2022)~\cite{tang2022swinunetr} și reprezintă
 una dintre cele mai performante arhitecturi pentru segmentarea medicală volumetrică.
 
 
@@ -3306,7 +3306,7 @@ generalizare superioară~\cite{loshchilov2019decoupled}.
 \subparagraph{Rata de învățare inițială.}
 Valoarea $\text{lr} = 10^{-4}$ reprezintă rata standard recomandată
 de MONAI și nnUNet pentru rețele 3D antrenate cu \texttt{DiceCELoss}
-și batch size mic~\cite{isensee2021nnu}.
+și batch size mic~\cite{isensee2019automated}.
 O rată mai mare ($10^{-3}$) ar destabiliza antrenamentul în prezența
 \hyperref[sec:deepsupervision]{deep supervision}, unde gradienții de
 la capetele auxiliare se sumează cu cei ai capului principal; o rată
@@ -3475,7 +3475,7 @@ latenței de I/O în timpul antrenamentului.
 
 
 \paragraph{Augmentări.}
-Strategia de augmentare urmează protocolul complet nnUNet~\cite{isensee2021nnu},
+Strategia de augmentare urmează protocolul complet nnUNet~\cite{isensee2019automated},
 aplicând transformări geometrice și de intensitate pentru a expune modelul
 la variabilitatea clinică și inter-scanner prezentă în practica reală.
 
@@ -6705,6 +6705,8 @@ dintre segmentarea automată, corecția umană și vizualizarea 3D actualizată.
       printr-un singur set de date centralizat.
 
 \begin{thebibliography}{99}
+
+
 \bibitem{bilic2023lits}
 Bilic, P., Christ, P., Li, H. B., Vorontsov, E., Ben-Cohen, A., Kaissis, G.,
 Szeskin, A., Jacobs, C., Mamani, G. E. H., Chartrand, G., et al. (2023).
