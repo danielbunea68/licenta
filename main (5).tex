@@ -485,26 +485,29 @@ față de care sunt comparate rezultatele din această lucrare.
     \textbf{Metodă} & \textbf{Dataset} &
     \textbf{Dice Ficat} & \textbf{Dice Tumoră} \\
     \midrule
-    MA-cGAN \newline (2024)
+    MA-cGAN \newline (2024)~\cite{macgan2024}
         & LiTS & 0.969 & 0.785 \\
     \addlinespace
-    ELANRes-MSCA-UNet \newline (2025)
+    ELANRes-MSCA-UNet \newline (2025)~\cite{elanres2025}
         & LiTS & 0.972 & 0.729 \\
     \addlinespace
-    H-DenseUNet \newline (Li et al., 2018)
+    H-DenseUNet \newline (Li et al., 2018)~\cite{li2018hdenseunet}
         & LiTS & 0.961 & 0.722 \\
     \addlinespace
-    nnUNet \newline (Isensee et al., 2021)
+    nnUNet \newline (Isensee et al.)~\cite{isensee2019automated}
         & LiTS & 0.967 & 0.763 \\
     \addlinespace
-    G-UNETR++ $^{\dagger}$
+    G-UNETR++ $^{\dagger}$~\cite{gunetrpp}
         & LiTS & — & — \\
+    \addlinespace
+    SwinUNETR \newline (Tang et al., 2022)~\cite{tang2022swinunetr}
+        & MSD Task03 & 0.954 & 0.757 \\
     \addlinespace
     \textbf{Monolitic (această lucrare)}
         & LiTS & \textbf{0.958} & \textbf{0.753} \\
     \addlinespace
-    \textbf{Cascade 1.0 (această lucrare)}
-        & LiTS & \textbf{0.942} & \textbf{0.665} \\
+\textbf{Cascade (această lucrare)}
+        & LiTS & \textbf{0.9521 } & \textbf{0.6869 } \\
     \bottomrule
 \end{tabular}
 \end{center}
@@ -517,11 +520,13 @@ scorurile individuale nu sunt disponibile pentru comparație directă.}}
 
 Modelul monolitic SwinUNETR din această lucrare obține rezultate
 competitive cu starea artei pentru segmentarea ficatului
-(Dice 0.958, comparabil cu nnUNet 0.963) și pentru segmentarea
-tumorilor (Dice 0.753, comparabil cu SwinUNETR original 0.748
-raportat de Tang et al.). Totuși, o comparație corectă cu
-metodele de referință impune analiza critică a condițiilor în
-care aceste scoruri au fost obținute.
+(Dice 0.958, comparabil cu nnUNet 0.967~\cite{isensee2019automated})
+și pentru segmentarea tumorilor (Dice 0.753, comparabil cu SwinUNETR
+0.757 raportat de Tang et al.~\cite{tang2022swinunetr} pe MSD
+Task03 Liver). Totuși, o comparație corectă cu metodele de referință
+impune analiza critică a condițiilor în care aceste scoruri au fost
+obținute --- în special diferențele de dataset (LiTS vs.\ MSD
+Task03 Liver) și de protocol de evaluare.
 
 \paragraph{Generalizare cross-dataset.}
 Majoritatea metodelor de referință antrenează și testează pe
