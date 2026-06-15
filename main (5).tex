@@ -1264,7 +1264,8 @@ antrenament este esențială pentru a preveni overfitting-ul și a îmbunătăț
 Augmentările utilizate în proiect sunt împărțite în două categorii complementare:
 \textbf{augmentări spațiale} (transformări geometrice aplicate simultan pe imagine și mască)
 și \textbf{augmentări de intensitate} (modificări ale valorilor de intensitate aplicate
-exclusiv pe imaginea CT, fără a afecta masca de segmentare).
+exclusiv pe imaginea CT, fără a afecta masca de segmentare). Toate transformările de tip
+\texttt{Rand...d} sunt implementări din biblioteca MONAI~\cite{cardoso2022monai}.
 
 \section{Extragerea Patch-urilor (RandCropByPosNegLabeld)}
 \label{sec:randcrop}
@@ -1288,10 +1289,10 @@ Problema extragerii aleatorii uniforme este că structurile de interes ocupă
 adesea o fracțiune extrem de mică din volum. În contextul segmentării hepatice, dezechilibrul este sever:
 ficatul ocupă aproximativ $2$--$5\%$ din volumul CT abdominal,
 iar tumorile hepatice sub $1\%$, coborând până la $0{,}1\%$
-în cazul leziunilor mici.Dacă patch-urile ar fi extrase
+în cazul leziunilor mici. Dacă patch-urile ar fi extrase
 complet aleatoriu, marea majoritate ar conține exclusiv țesut de fundal, iar
 modelul nu ar vedea suficiente exemple ale clasei minoritare pentru a o detecta.
-\texttt{RandCropByPosNegLabeld} rezolvă această problemă prin controlul explicit
+\texttt{RandCropByPosNegLabeld}~\cite{isensee2019automated, cardoso2022monai} rezolvă această problemă prin controlul explicit
 al raportului pozitiv/negativ:
 
 \formula{
@@ -1324,7 +1325,7 @@ volumele CT complete depășesc această dimensiune. Inferența directă
 prin împărțirea volumului în patch-uri adiacente non-suprapuse
 introduce artefacte vizibile la granițele dintre patch-uri, cauzate
 de lipsa contextului spatial în afara ferestrei de procesare.
-Sliding window cu overlap rezolvă această problemă prin extragerea
+Sliding window cu overlap~\cite{isensee2019automated, cardoso2022monai} rezolvă această problemă prin extragerea
 patch-urilor cu un pas $s < d$ (unde $d$ este dimensiunea patch-ului),
 astfel încât zonele de granită sunt acoperite de mai multe patch-uri
 simultan.
@@ -1410,10 +1411,10 @@ de orientare, dimensiune și poziție similare celor din practica clinică.
 
 Augmentările spațiale sunt cele mai importante tipuri de augmentare
 pentru segmentarea medicală 3D, conform studiului lui Isensee et al.\
-(nnUNet). Ele simulează variațiile naturale ale poziționării pacientului
+(nnUNet)~\cite{isensee2019automated}. Ele simulează variațiile naturale ale poziționării pacientului
 pe masa de scanner, diferențele anatomice între pacienți (ficat mai mare
 sau mai mic, formă diferită) și variantele de rotație și translație
-inevitabile în practica clinică.
+inevitabile în practica clinică~\cite{cicek2016_3dunet}.
 
 % ─────────────────────────────────────────────
 \subsection{RandFlipd — Oglindire aleatorie}
@@ -1427,7 +1428,7 @@ simulând variații de orientare a pacientului pe masa de scanner.
 \end{infobox}
 
 Oglindirea este cea mai simplă și mai eficientă formă de augmentare
-geometrică. Se aplică independent pe fiecare din cele trei axe
+geometrică~\cite{isensee2019automated}. Se aplică independent pe fiecare din cele trei axe
 spațiale, cu probabilitate configurabilă:
 
 \begin{lstlisting}[language=Python]
@@ -1467,7 +1468,7 @@ inter-pacient.
 \end{infobox}
 
 Transformarea afină combină rotație, scalare și translație
-într-o singură operație, configurabilă independent pe fiecare
+într-o singură operație~\cite{isensee2019automated}, configurabilă independent pe fiecare
 componentă:
 
 \begin{lstlisting}[language=Python]
@@ -1530,7 +1531,7 @@ intensitate.
 
 Spre deosebire de \hyperref[sec:randaffine]{\texttt{RandAffined}},
 care aplică rotații continue cu unghi arbitrar și necesită
-interpolare, \texttt{RandRotate90d} produce exclusiv rotații de
+interpolare, \texttt{RandRotate90d}~\cite{cardoso2022monai} produce exclusiv rotații de
 multipli de $90°$ — operații exacte pe grila de voxeli.
 Aceasta înseamnă că niciun voxel nu cade între pozițiile grilei
 după transformare, eliminând complet necesitatea interpolării și
@@ -1583,14 +1584,14 @@ pe date din instituții sau protocoale diferite față de setul de antrenament.
 Scannerele CT diferă prin calibrare, kerneluri de reconstrucție, dozele de radiație
 și protocoalele de injectare a substanței de contrast, generând imagini cu aspect vizual
 diferit chiar și pentru aceeași anatomie. Augmentările de intensitate simulează artificial
-această variabilitate în timpul antrenamentului, făcând modelul mai robust la aceste diferențe.
+această variabilitate în timpul antrenamentului, făcând modelul mai robust la aceste diferențe~\cite{isensee2019automated}.
 
 \subsection{Tipuri utilizate}
 
 \subsubsection{RandGaussianNoised — Zgomot gaussian}
 \label{sec:gaussnoise}
 
-Adaugă zgomot gaussian aleatoriu peste fiecare voxel al imaginii CT.
+Adaugă zgomot gaussian aleatoriu peste fiecare voxel al imaginii CT~\cite{isensee2019automated}.
 Zgomotul gaussian modelează fluctuațiile electronice ale detectorilor scannerului,
 care sunt mai pronunțate la doze mici de radiație (protocoale low-dose) sau la pacienți
 cu indice de masă corporală ridicat, unde razele X trebuie să traverseze mai mult țesut.
@@ -1602,7 +1603,7 @@ din astfel de protocoale; această augmentare îl expune artificial la această 
 \label{sec:gausssmooth}
 
 Aplică un filtru de blur gaussian tridimensional cu deviație standard $\sigma$ aleasă aleatoriu
-din intervalul $[0.5, 1.5]$ voxeli. Blur-ul simulează efectul de „înmuiere" a marginilor
+din intervalul $[0.5, 1.5]$ voxeli~\cite{isensee2019automated}. Blur-ul simulează efectul de „înmuiere" a marginilor
 care apare la scannerele cu rezoluție spațială scăzută sau la reconstrucțiile cu kerneluri soft
 (smooth kernels), utilizate frecvent în protocoalele abdominale pentru reducerea zgomotului.
 Un ficat cu contururi bine definite pe un scanner modern de ultimă generație poate apărea
@@ -1611,7 +1612,7 @@ cu margini difuze pe echipamente mai vechi sau pe protocoale optimizate pentru d
 \subsubsection{RandScaleIntensityd — Scalare globală a intensității}
 \label{sec:scaleintensity}
 
-Înmulțește toate intensitățile din volum cu un factor aleatoriu în intervalul $[0.7, 1.3]$.
+Înmulțește toate intensitățile din volum cu un factor aleatoriu în intervalul $[0.7, 1.3]$~\cite{isensee2019automated}.
 Aceasta simulează diferențele de calibrare a detectorilor între scannere diferite:
 același țesut hepatic poate apărea mai luminos sau mai întunecat în funcție de producătorul
 echipamentului și de setările de reconstrucție. De exemplu, un ficat normal care apare
@@ -1622,7 +1623,7 @@ chiar dacă densitatea fizică a țesutului este identică.
 \label{sec:adjustcontrast}
 
 Aplică o transformare gamma nelineară, ridicând fiecare valoare de intensitate normalizată
-$I \in [0, 1]$ la puterea $\gamma$: $I' = I^{\gamma}$.
+$I \in [0, 1]$ la puterea $\gamma$: $I' = I^{\gamma}$~\cite{isensee2019automated}.
 Valorile $\gamma < 1$ măresc luminozitatea zonelor cu intensitate scăzută (mai mult contrast
 în țesuturile moi), iar valorile $\gamma > 1$ le comprimă (mai mult contrast în structurile dense).
 Această augmentare simulează variațiile de post-procesare și de fereastră de afișare aplicate
@@ -1633,7 +1634,7 @@ chiar și pe aceleași date brute.
 \label{sec:lowres}
 
 Downsamplează volumul la o rezoluție mai mică (cu un factor aleatoriu între 0.5 și 1.0)
-folosind interpolarea trilineară, apoi îl readuce la dimensiunea originală prin upsampling.
+folosind interpolarea trilineară, apoi îl readuce la dimensiunea originală prin upsampling~\cite{isensee2019automated}.
 Efectul net este o pixelizare controlată a imaginii, similară cu cea observată la scannerele
 cu rezoluție spațială redusă sau la protocoalele cu pas inter-felie mare (5--8\,mm).
 Această augmentare este deosebit de importantă pentru generalizarea modelului pe date
@@ -1644,7 +1645,7 @@ față de dataseturi de cercetare precum LiTS.
 \label{sec:histshift}
 
 Deformează neliniar histograma intensităților folosind o curbă de mapare definită prin
-10 puncte de control aleatoare. Este cea mai complexă augmentare de intensitate din pipeline:
+10 puncte de control aleatoare~\cite{cardoso2022monai}. Este cea mai complexă augmentare de intensitate din pipeline:
 spre deosebire de scalare sau gamma (care aplică o transformare uniformă întregului volum),
 deformarea histogramei poate modifica diferit zonele cu intensitate scăzută față de cele
 cu intensitate ridicată. Simulează variații complexe de protocol de contrast sau diferențe
@@ -1655,7 +1656,7 @@ distribuția intensităților în zona hepatică.
 \label{sec:shiftintensity}
 
 Adaugă o valoare constantă aleatorie (în intervalul $[-0.1, 0.1]$ după normalizare)
-la toate intensitățile din volum. Simulează \textit{bias field}-ul — o variație lentă
+la toate intensitățile din volum~\cite{isensee2019automated}. Simulează \textit{bias field}-ul — o variație lentă
 și globală a intensității cauzată de neuniformitatea câmpului de radiație sau a detectorilor,
 frecventă în imaginile CT abdominale. Spre deosebire de scalare (care afectează
 proporțional mai mult valorile mari), shift-ul afectează uniform toate intensitățile,
@@ -1669,7 +1670,6 @@ Probabilitățile individuale ale augmentărilor de intensitate sunt deliberat m
 a evita aplicarea simultană a tuturor transformărilor pe același patch. O probabilitate
 $p$ per augmentare implică că aproximativ $(1-p)^N$ din patch-uri ajung la model fără
 nicio modificare de intensitate, asigurând că modelul vede și date „curate".
-
 
 % ════════════════════════════════════════════════════════════════════════════
 %  CAPITOLUL 4 — ANTRENARE
