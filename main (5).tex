@@ -1264,8 +1264,7 @@ antrenament este esențială pentru a preveni overfitting-ul și a îmbunătăț
 Augmentările utilizate în proiect sunt împărțite în două categorii complementare:
 \textbf{augmentări spațiale} (transformări geometrice aplicate simultan pe imagine și mască)
 și \textbf{augmentări de intensitate} (modificări ale valorilor de intensitate aplicate
-exclusiv pe imaginea CT, fără a afecta masca de segmentare). Toate transformările de tip
-\texttt{Rand...d} sunt implementări din biblioteca MONAI~\cite{cardoso2022monai}.
+exclusiv pe imaginea CT, fără a afecta masca de segmentare). 
 
 \section{Extragerea Patch-urilor (RandCropByPosNegLabeld)}
 \label{sec:randcrop}
@@ -1693,7 +1692,7 @@ tehnicilor de eficiență computațională.
 \vspace{4pt}
 \begin{infobox}
 Funcție de loss bazată pe coeficientul de similaritate Sørensen--Dice,
-care măsoară suprapunerea dintre predicția modelului și \textit{ground truth}.
+care măsoară suprapunerea dintre predicția modelului și \textit{ground truth}~\cite{milletari2016vnet}.
 \end{infobox}
 
 \formula{
@@ -1711,7 +1710,7 @@ care măsoară suprapunerea dintre predicția modelului și \textit{ground truth
 Dice Loss are valoarea 0 atunci când predicția coincide perfect cu masca reală și valoarea 1
 atunci când nu există nicio suprapunere. Față de Cross-Entropy, Dice Loss are avantajul esențial
 de a fi invariant la dezechilibrul de clase: funcția de pierdere se concentrează direct
-pe suprapunerea dintre clasele de interes, nu pe numărul de voxeli din fiecare clasă.
+pe suprapunerea dintre clasele de interes, nu pe numărul de voxeli din fiecare clasă~\cite{milletari2016vnet}.
 Aceasta face ca tumorile mici, care ocupă sub 0.1\% din volum, să contribuie la fel de mult
 la gradienți ca și ficatul, care ocupă câteva procente din volum.
 
@@ -1762,7 +1761,7 @@ mai mare decât o greșeală pe clasa majoritară (background):
 \begin{infobox}
 Funcție de loss combinată care unește avantajele DiceLoss
 (robust la dezechilibru de clase) și CrossEntropyLoss
-(penalizare per voxel stabilă).
+(penalizare per voxel stabilă)~\cite{isensee2019automated}.
 \end{infobox}
 
 \formula{
@@ -1803,7 +1802,7 @@ Aceasta este configurația standard recomandată de MONAI și nnUNet.
 \begin{infobox}
 Wrapper peste DiceCELoss care aplică loss-ul la multiple scări ale
 output-ului rețelei, forțând straturile intermediare să învețe
-reprezentări utile — nu doar stratul final.
+reprezentări utile — nu doar stratul final~\cite{isensee2019automated}.
 \end{infobox}
 
 DynUNet cu \texttt{deep\_supervision=True} produce nu un singur output,
@@ -1843,7 +1842,7 @@ sting (vanishing gradients) în rețelele adânci.
 \begin{infobox}
 Variantă îmbunătățită a optimizatorului Adam care separă
 \textit{weight decay} (regularizare L2) de actualizarea adaptivă
-a ratei de învățare, corectând o problemă fundamentală din Adam original.
+a ratei de învățare, corectând o problemă fundamentală din Adam original~\cite{loshchilov2019decoupled}.
 \end{infobox}
 
 \formula{
@@ -1866,7 +1865,7 @@ Diferența față de Adam clasic constă în modul în care este aplicat weight 
 În Adam, weight decay-ul este adăugat la gradient înainte de actualizarea adaptivă,
 ceea ce face ca efectul regularizării să fie scalat invers proporțional cu magnitudinea
 gradienților. În AdamW, weight decay-ul se aplică direct pe parametri, independent de
-gradient, producând o regularizare uniformă și mai eficientă.
+gradient, producând o regularizare uniformă și mai eficientă~\cite{loshchilov2019decoupled}.
 
 
 \section{Learning Rate Scheduling}
@@ -1942,7 +1941,7 @@ Tehnică de antrenament care utilizează \textbf{FP16} (16 biți) pentru
 calculele costisitoare (propagare înainte și înapoi) și \textbf{FP32}
 (32 biți) pentru actualizarea parametrilor, reducând consumul de
 memorie GPU la jumătate și accelerând antrenamentul fără a afecta
-precizia finală a modelului.
+precizia finală a modelului~\cite{micikevicius2018mixedprecision}.
 \end{infobox}
 
 Rețelele de segmentare 3D operează pe volume de date foarte mari:
@@ -1976,7 +1975,7 @@ Diferența fundamentală între cele două formate constă în precizia
 Limitarea principală a FP16 este intervalul redus de valori: gradienții
 mici (tipici în fazele târzii ale antrenamentului) pot deveni zero prin
 rotunjire — fenomen numit \textbf{underflow}. AMP rezolvă această
-problemă prin \textbf{loss scaling}.
+problemă prin \textbf{loss scaling}~\cite{micikevicius2018mixedprecision}.
 
 \subsection{Loss Scaling}
 
@@ -2014,8 +2013,6 @@ scaler.update()                # ajusteaza S pentru iteratia urmatoare
 (convoluții, atenție multi-cap, matmul) în FP16, păstrând în FP32
 operațiile sensibile numeric (normalizare, softmax, actualizare
 parametri).
-
-
 
 \chapter{Metrici de Evaluare}
 
@@ -6711,6 +6708,20 @@ dintre segmentarea automată, corecția umană și vizualizarea 3D actualizată.
       printr-un singur set de date centralizat.
 
 \begin{thebibliography}{99}
+\bibitem{milletari2016vnet}
+Milletari, F., Navab, N., \& Ahmadi, S.-A. (2016).
+\textit{V-Net: Fully Convolutional Neural Networks for Volumetric Medical
+Image Segmentation}.
+2016 Fourth International Conference on 3D Vision (3DV), 565--571.
+\url{https://arxiv.org/abs/1606.04797}
+
+\bibitem{micikevicius2018mixedprecision}
+Micikevicius, P., Narang, S., Alben, J., Diamos, G., Elsen, E., Garcia, D.,
+Ginsburg, B., Houston, M., Kuchaiev, O., Venkatesh, G., \& Wu, H. (2018).
+\textit{Mixed Precision Training}.
+ICLR 2018.
+\url{https://arxiv.org/abs/1710.03740}
+
 \bibitem{cicek2016_3dunet}
 Çiçek, Ö., Abdulkadir, A., Lienkamp, S. S., Brox, T., \& Ronneberger, O. (2016).
 \textit{3D U-Net: Learning Dense Volumetric Segmentation from Sparse Annotation}.
